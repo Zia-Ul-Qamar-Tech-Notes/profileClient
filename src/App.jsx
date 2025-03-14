@@ -11,6 +11,8 @@ function App() {
   );
   const [userData, setUserData] = useState(null);
 
+  const url = "https://jwtauthserver.azurewebsites.net";
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (refreshToken) {
@@ -21,7 +23,7 @@ function App() {
   }, [refreshToken]);
 
   const handleRegister = async () => {
-    const res = await fetch("http://localhost:8000/auth/api/register", {
+    const res = await fetch(`${url}/auth/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -31,7 +33,7 @@ function App() {
   };
 
   const handleLogin = async () => {
-    const res = await fetch("http://localhost:8000/auth/api/login", {
+    const res = await fetch(`${url}/auth/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -50,7 +52,7 @@ function App() {
 
   const refreshAccessToken = async () => {
     console.log("Refreshing Access Token...");
-    const res = await fetch("http://localhost:8000/refresh/token", {
+    const res = await fetch(`${url}/refresh/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),
@@ -67,7 +69,7 @@ function App() {
 
   const fetchTodos = async () => {
     if (!accessToken) return alert("Please login first");
-    const res = await fetch("http://localhost:8000/todos", {
+    const res = await fetch(`${url}/todos`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const data = await res.json();
