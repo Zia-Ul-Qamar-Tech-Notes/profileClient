@@ -30,4 +30,4 @@ jobs:
           inlineScript: |
             az storage blob upload-batch --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
             --account-key ${{ secrets.AZURE_STORAGE_KEY }} \
-            --destination '$web' --source './build' --overwrite
+            --destination '$web' --source './dist' --overwrite
