@@ -12,13 +12,15 @@ function App() {
   const [userData, setUserData] = useState(null);
 
   const url = "https://jwtauthserver.azurewebsites.net";
+  // const url = "http://localhost:8000";
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (refreshToken) {
         refreshAccessToken();
+        setRefreshToken(localStorage.getItem("refreshToken"));
       }
-    }, 20000); // Refresh every 2 minutes
+    }, 20000); // Refresh every 20 Sec
     return () => clearInterval(interval);
   }, [refreshToken]);
 
@@ -52,6 +54,7 @@ function App() {
 
   const refreshAccessToken = async () => {
     console.log("Refreshing Access Token...");
+    let refreshToken = localStorage.getItem("refreshToken");
     const res = await fetch(`${url}/refresh/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -68,6 +71,7 @@ function App() {
   };
 
   const fetchTodos = async () => {
+    localStorage.setItem("accessToken", accessToken);
     if (!accessToken) return alert("Please login first");
     const res = await fetch(`${url}/todos`, {
       headers: { Authorization: `Bearer ${accessToken}` },
