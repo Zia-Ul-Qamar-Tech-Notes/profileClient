@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "tailwindcss";
 
 function App() {
   const [email, setEmail] = useState("");
@@ -89,32 +90,64 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h2>Auth App</h2>
-      {!accessToken ? (
-        <>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleRegister}>Register</button>
-          <button onClick={handleLogin}>Login</button>
-        </>
-      ) : (
-        <>
-          <button onClick={fetchTodos}>Fetch Todos</button>
-          <button onClick={logout}>Logout</button>
-        </>
-      )}
-      {userData && <pre>{JSON.stringify(userData, null, 2)}</pre>}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Auth App
+        </h2>
+        {!accessToken ? (
+          <>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <div className="flex justify-between">
+              <button
+                onClick={handleRegister}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md mr-2"
+              >
+                Register
+              </button>
+              <button
+                onClick={handleLogin}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md ml-2"
+              >
+                Login
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={fetchTodos}
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-md mb-4"
+            >
+              Fetch Todos
+            </button>
+            <button
+              onClick={logout}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md"
+            >
+              Logout
+            </button>
+          </>
+        )}
+        {userData && (
+          <pre className="mt-4 bg-gray-200 p-4 rounded-md overflow-auto">
+            {JSON.stringify(userData, null, 2)}
+          </pre>
+        )}
+      </div>
     </div>
   );
 }
