@@ -55,23 +55,52 @@ function App() {
 
   const refreshAccessToken = async () => {
     console.log("Refreshing Access Token...");
-    let refreshToken = localStorage.getItem("refreshToken");
-    const res = await fetch(`${url}/refresh/token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-    const data = await res.json();
-    if (data.accessToken) {
+
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    // If refresh token is missing, logout immediately
+    if (!refreshToken) {
+      alert("Session Expired, Please Login Again");
+      logout();
+      return;
+    }
+
+    try {
+      const res = await fetch(`${url}/refresh/token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      const data = await res.json();
+
+      // If the response status is 401 or refresh token is invalid, log out the user immediately
+      if (!res.ok || !data.accessToken) {
+        console.error("Invalid or Expired Refresh Token:", data);
+        alert("Session Expired, Please Login Again");
+        logout();
+        return;
+      }
+
+      // If accessToken is received, update local storage
       localStorage.setItem("accessToken", data.accessToken);
       setAccessToken(data.accessToken);
-    } else {
+    } catch (error) {
+      console.error("Error refreshing access token:", error);
       alert("Session Expired, Please Login Again");
       logout();
     }
   };
 
   const fetchTodos = async () => {
+    const storedRefreshToken = localStorage.getItem("refreshToken");
+
+    // If refreshToken is manually deleted or modified, log out
+    if (!storedRefreshToken || storedRefreshToken !== refreshToken) {
+      alert("Session Expired. Please login again.");
+      // setUserData(null);
+      return logout();
+    }
     localStorage.setItem("accessToken", accessToken);
     if (!accessToken) return alert("Please login first");
     const res = await fetch(`${url}/todos`, {
